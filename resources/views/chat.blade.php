@@ -180,13 +180,14 @@
                     </form>
 
                     <ul class="list-group message-list" id="messageList">
-                       @foreach ($models as $model)
+                        @foreach ($models as $model)
                             <li class="message-item">
                                 <span class="message-sender text-primary">{{ $model->sender }}:</span>
                                 <span class="message-text">{{ $model->text }}</span>
-                                @if($model->file)
+                                @if ($model->file)
                                     <div class="file-preview">
-                                        <a href="{{ asset('storage/' . $model->file) }}" target="_blank">Download File</a>
+                                        <a href="{{ asset('storage/' . $model->file) }}" target="_blank">Download
+                                            File</a>
                                     </div>
                                 @endif
                             </li>
@@ -196,11 +197,14 @@
             </div>
         </div>
     </div>
-
-    <script>
-        const chatId = @json($chat->id);
-        const userId = @json(auth()->user()->name);
-    </script>
+    @if ($chat)
+        <script>
+            const chatId = @json($chat->id);
+            const userId = @json(auth()->user()->name);
+        </script>
+    @else
+        <p>No chat selected</p>
+    @endif
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">

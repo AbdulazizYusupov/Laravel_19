@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
            'status' => 1
         ]);
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('index', absolute: false));
     }
 
     /**
