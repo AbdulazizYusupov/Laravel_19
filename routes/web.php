@@ -12,14 +12,16 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/logout',[ChatController::class, 'logout'])->name('logout');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/index',[ChatController::class, 'index'])->name('index');
-    Route::get('/show{id}',[ChatController::class, 'show'])->name('show');
-    Route::post('/create{id}',[ChatController::class, 'create'])->name('create');
+    Route::get('/index', [ChatController::class, 'index'])->name('index');
+    Route::get('/show{id}', [ChatController::class, 'show'])->name('show');
+    Route::post('/create{id}', [ChatController::class, 'create'])->name('create');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

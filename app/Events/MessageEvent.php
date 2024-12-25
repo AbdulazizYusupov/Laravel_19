@@ -18,9 +18,11 @@ class MessageEvent implements ShouldBroadcast
      * Create a new event instance.
      */
     public $message;
+    public $fileUrl;
     public function __construct($message)
     {
         $this->message = $message;
+        $this->fileUrl = $message->file ? asset('storage/' . $message->file) : null;
     }
 
     /**
@@ -35,11 +37,13 @@ class MessageEvent implements ShouldBroadcast
         ];
     }
 
+
     public function broadcastWith()
     {
         return [
             'text' => $this->message->text,
-            'sender' => $this->message->sender
+            'sender' => $this->message->sender,
+            'file' => $this->fileUrl
         ];
     }
 }

@@ -34,17 +34,40 @@ class ChatController extends Controller
         return view('chat', ['users' => $users, 'chat' => $chat, 'bro' => $user, 'models' => $models]);
     }
     public function create(Request $request, $id)
+{
+    $request->validate([
+        'text' => 'required_without:file',
+        'file' => 'nullable|mimes:jpeg,png,pdf,docx,txt,doc,mp4,mp3|max:5000',
+    ]);
+
+    $sender = auth()->user()->name;
+    $filePath = null;
+
+    if ($request->hasFile('file')) {
+        $file = $request->file('file');
+        $filePath = $file->store('messages', 'public');
+    }
+
+    $Message = Message::create([
+        'text' => $request->text,
+        'chat_id' => $id,
+        'sender' => $sender,
+        'file' => $filePath,
+    ]);
+
+    broadcast(new MessageEvent($Message));
+    return back();
+}
+
+    public function logout()
     {
-        $request->validate([
-            'text' => 'required'
-        ]);
-        $sender = auth()->user()->name;
-        $Message = Message::create([
-            'text' => $request->text,
-            'chat_id' => $id,
-            'sender' => $sender
-        ]);
-        broadcast(new MessageEvent($Message));
-        return back();
+        $user = User::find(auth()->id());
+        if ($user) {
+            $user->status = 0;
+            $user->save();
+        }
+
+        auth()->logout();
+        return redirect('/');
     }
 }
