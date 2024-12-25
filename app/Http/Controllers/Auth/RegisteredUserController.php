@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\NewUserEvent;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -49,6 +50,8 @@ class RegisteredUserController extends Controller
         ]);
 
         Auth::login($user);
+
+        event(new NewUserEvent($user));
 
         return redirect()->route('index');
     }

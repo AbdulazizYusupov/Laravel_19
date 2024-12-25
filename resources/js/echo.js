@@ -18,8 +18,8 @@ console.log(userId);
 
 window.Echo.channel(`xabar.${chatId}`)
     .listen('MessageEvent', (e) => {
-        console.log('Received Event Data:', e);  // event to'liq
-        console.log('File URL:', e.file);  // Fayl URL'si
+        console.log('Received Event Data:', e);
+        console.log('File URL:', e.file);
         const messageList = document.getElementById('messageList');
         const newMessage = document.createElement('li');
         newMessage.innerHTML = `
@@ -32,5 +32,16 @@ window.Echo.channel(`xabar.${chatId}`)
         if (e.sender !== userId) {
             messageList.prepend(newMessage);
         }
+    });
+
+window.Echo.channel('newUser')
+    .listen('NewUserEvent', (e) => {
+        console.log('New user registered:', e);
+        const userList = document.getElementById('userList');
+        const newUser = document.createElement('li');
+        newUser.classList.add('list-group-item');
+        const userProfileUrl = `/show/${ e.id }`;
+        newUser.innerHTML = `<a href="${userProfileUrl}">${e.name}</a>`;
+        userList.prepend(newUser);
     });
 

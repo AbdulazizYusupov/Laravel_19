@@ -136,7 +136,7 @@
                     </div>
                 </div><br>
                 <h4 class="text-center mb-4">Chat Users</h4>
-                <div class="list-group user-list">
+                <div class="list-group user-list" id="userList">
                     @foreach ($users as $user)
                         <a href="{{ route('show', $user->id) }}" class="list-group-item list-group-item-action">
                             <div class="d-flex justify-content-between align-items-center">
@@ -197,7 +197,7 @@
             </div>
         </div>
     </div>
-    @if ($chat)
+    @if (isset($chat))
         <script>
             const chatId = @json($chat->id);
             const userId = @json(auth()->user()->name);
