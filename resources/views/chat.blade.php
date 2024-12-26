@@ -7,6 +7,8 @@
     <title>Chat</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
     @vite('resources/js/app.js')
     <style>
         .chat-container {
@@ -106,6 +108,34 @@
         .btn-secondary {
             border-radius: 50px;
         }
+
+        .file-upload-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-upload-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 20px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .file-input {
+            display: none;
+        }
     </style>
 </head>
 
@@ -163,13 +193,13 @@
                             <input type="text" name="text" class="form-control message-input"
                                 placeholder="Write message..."><br>
 
-                            <label for="fileInput" class="btn btn-outline-secondary" style="cursor: pointer;">
-                                Upload File
+                            <label for="fileInput" class="btn btn-outline-primary file-upload-label">
+                                <i class="fas fa-upload"></i> Upload File
                             </label>
                             <input type="file" name="file" id="fileInput" class="file-input">
 
                             <button type="submit" class="btn-send"
-                                style="width: 50px; background-color: #007bff; border-radius: 5px; padding: 10px;">
+                                style="width: 50px; background-color: grey; border-radius: 5px; padding: 10px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                     <path
@@ -186,13 +216,32 @@
                                 <span class="message-text">{{ $model->text }}</span>
                                 @if ($model->file)
                                     <div class="file-preview">
-                                        <a href="{{ asset('storage/' . $model->file) }}" target="_blank">Download
-                                            File</a>
+                                        @php
+                                            $extension = pathinfo($model->file, PATHINFO_EXTENSION);
+                                        @endphp
+
+                                        @if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
+                                            <img src="{{ asset('storage/' . $model->file) }}" alt="Image"
+                                                width="200px">
+                                        @elseif (in_array($extension, ['mp4', 'mp3', 'webm', 'ogg']))
+                                            <video width="200px" controls>
+                                                <source src="{{ asset('storage/' . $model->file) }}"
+                                                    type="video/{{ $extension }}">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        @elseif (in_array($extension, ['txt', 'pdf', 'doc', 'docx']))
+                                            <a href="{{ asset('storage/' . $model->file) }}" target="_blank">Download
+                                                File</a>
+                                        @else
+                                            <a href="{{ asset('storage/' . $model->file) }}" target="_blank">Download
+                                                File</a>
+                                        @endif
                                     </div>
                                 @endif
                             </li>
                         @endforeach
                     </ul>
+
                 @endif
             </div>
         </div>
